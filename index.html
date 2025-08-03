@@ -23,7 +23,7 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -45%); /* Fixed from -55% */
+      transform: translate(-50%, -35%); /* Fixed from -55% */
       text-align: center;
       color: #e05757;
       z-index: 0;
@@ -117,31 +117,38 @@
     }
 
     /* 📱 Mobile-specific styles */
-    @media (max-width: 480px) {
-      .background-template .heart {
-        font-size: 100px;
-      }
+@media (max-width: 480px) {
+  .background-template .heart {
+    font-size: 100px;
+  }
 
-      .background-template .stacked-text {
-        font-size: 22px;
-      }
+  .background-template .stacked-text {
+    font-size: 22px;
+  }
 
-      .msg {
-        font-size: 15px;
-        max-width: 90%;
-      }
+  .msg {
+    font-size: 15px;
+    max-width: 90%;
+  }
 
-      .input-row {
-        flex-direction: column;
-        padding: 10px;
-        gap: 10px;
-      }
+  .input-row {
+    flex-direction: row; /* 👈 changed from column */
+    padding: 10px;
+    gap: 10px;
+  }
 
-      input, button {
-        width: 100%;
-        font-size: 15px;
-      }
-    }
+  input {
+    flex: 1 1 70%;
+    font-size: 15px;
+  }
+
+  button {
+    flex: 1 1 30%;
+    font-size: 15px;
+    margin-left: 0;
+  }
+}
+
   </style>
 </head>
 <body>
