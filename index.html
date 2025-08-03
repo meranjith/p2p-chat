@@ -21,26 +21,25 @@
 
     .background-template {
       position: absolute;
-      top: 30%; /* moved higher so "FIRST" stays visible */
+      top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -45%); /* Fixed from -55% */
       text-align: center;
       color: #e05757;
       z-index: 0;
       user-select: none;
       pointer-events: none;
       opacity: 1.0;
-      text-shadow: 0 0 8px #e05757cc;
     }
 
     .background-template .heart {
-      font-size: 120px;
+      font-size: 140px;
       margin-bottom: 10px;
     }
 
     .background-template .stacked-text {
-      font-size: 24px;
-      line-height: 1.5;
+      font-size: 28px;
+      line-height: 1.4; /* Reduced for better spacing */
       white-space: pre-line;
     }
 
@@ -82,31 +81,32 @@
 
     .input-row {
       display: flex;
-      padding: 10px;
+      flex-wrap: wrap;
+      padding: 15px;
       background-color: #1a0606;
       border-top: 2px solid #3a1a1a;
       position: relative;
       z-index: 1;
       gap: 10px;
-      flex-wrap: nowrap;
     }
 
     input {
-      flex: 1;
+      flex: 1 1 70%;
       padding: 10px;
       font-size: 16px;
       background-color: #3a1a1a;
       color: white;
       border: none;
       border-radius: 5px;
+      min-width: 0;
     }
 
     button {
-      flex-shrink: 0;
+      flex: 1 1 28%;
       background-color: #e05757;
       color: white;
       border: none;
-      padding: 10px 16px;
+      padding: 10px 20px;
       font-size: 16px;
       border-radius: 5px;
       cursor: pointer;
@@ -116,14 +116,14 @@
       background-color: #b13f3f;
     }
 
-    /* 📱 Mobile fix: stack input and button cleanly */
+    /* 📱 Mobile-specific styles */
     @media (max-width: 480px) {
       .background-template .heart {
-        font-size: 90px;
+        font-size: 100px;
       }
 
       .background-template .stacked-text {
-        font-size: 20px;
+        font-size: 22px;
       }
 
       .msg {
@@ -133,23 +133,20 @@
 
       .input-row {
         flex-direction: column;
-        gap: 8px;
+        padding: 10px;
+        gap: 10px;
       }
 
       input, button {
         width: 100%;
         font-size: 15px;
       }
-
-      button {
-        margin-left: 0;
-      }
     }
   </style>
 </head>
 <body>
 
-  <!-- ❤️ Heart & Message Background -->
+  <!-- 🔴 Heart + Love Message as Background -->
   <div class="background-template">
     <div class="heart">❤️</div>
     <div class="stacked-text">
@@ -172,13 +169,12 @@
   </div>
 
   <script>
-    const room = "room123";
+    const room = "room123"; // Customize this if needed
     const project = "mysecretchat";
     const ws = new WebSocket(`wss://ws.futureforce.ee/?p=${project}&r=${room}`);
 
     const chat = document.getElementById('chat');
     const input = document.getElementById('msg');
-
     const sessionId = Math.random().toString(36).substr(2, 9);
 
     ws.onmessage = e => {
@@ -193,6 +189,7 @@
     function send() {
       const text = input.value.trim();
       if (!text) return;
+
       const message = { text, id: sessionId };
       ws.send(JSON.stringify(message));
       addMessage(text, 'sender');
