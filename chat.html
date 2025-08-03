@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Heart Chat</title>
+  <style>
+    body { margin:0; background:#000; font-family:sans-serif;
+      background: url('data:image/svg+xml;utf8,\
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="red">\
+<text x="0" y="80" font-size="80">❤</text></svg>')
+      center center / 200px no-repeat; color:#fff; display:flex; flex-direction:column; height:100vh;}
+    #msgs { flex:1; overflow-y:auto; padding:10px; display:flex; flex-direction:column;}
+    .msg { background:#111; padding:8px 12px; margin-bottom:6px; position:relative; border-radius:4px; max-width:80%; }
+    .msg.mine { align-self:flex-end; background:#333; }
+    .msg .del { position:absolute; top:4px; right:6px; color:#f55; cursor:pointer; }
+    #input { display:flex; padding:10px; background:#222; }
+    #input input { flex:1; padding:10px; background:#333; border: none; color:#fff; border-radius:4px;}
+    #input button { margin-left:8px; padding:10px; background:#444; border:none; color:#fff; cursor:pointer; border-radius:4px;}
+    #status { padding:8px; text-align:center; font-size:14px; }
+  </style>
+</head>
+<body>
+  <div id="status">Connecting...</div>
+  <div id="msgs"></div>
+  <div id="input"><input id="txt" placeholder="Type a message…"><button onclick="send()">Send</button></div>
+  <script>
+    const status = document.getElementById('status');
+    const msgs = document.getElementById('msgs');
+    const txt = document.getElementById('txt');
+    let ws;
+
+    function add(msg, mine=false) {
+      const d = document.createElement('div');
+      d.className = 'msg' + (mine ? ' mine' : '');
+      d.textContent = msg;
+      const x = document.createElement('span');
+      x.className = 'del'; x.textContent = '×';
+      x.onclick = () => d.remove();
+      d.appendChild(x);
+      msgs.appendChild(d);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function send() {
+      const v = txt.value.trim();
+      if (!v || !ws || ws.readyState!==1) return;
+      ws.send(v);
+      add(v, true);
+      txt.value = '';
+    }
+
+    ws = new WebSocket('wss://heart-chat.fly.dev');
+    ws.onopen = () => status.textContent = 'Connected';
+    ws.onmessage = ev => add(ev.data, false);
+    ws.onclose = () => status.textContent = 'Disconnected';
+    ws.onerror = () => status.textContent = 'Error connecting';
+  </script>
+</body>
+</html>
+
